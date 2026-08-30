@@ -1,8 +1,8 @@
 name: Deploy a disenoguaro.com
 
 on:
-  push:
-    branches: [master]
+  # push:                 # se reactiva cuando el deploy funcione
+  #   branches: [master]
   workflow_dispatch:
 
 jobs:

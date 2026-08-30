@@ -1,0 +1,31 @@
+name: Buscar puerto SSH
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Escanear puertos comunes de SSH en el servidor
+        run: |
+          HOST="216.246.46.74"
+          PORTS="22 222 2020 2022 2200 2210 2211 2222 2233 2244 5567 6543 7822 8022 10022 12141 17177 18765 21098 22000 22222 30022 33000 43000 50683"
+          echo "Escaneando $HOST ..."
+          FOUND=""
+          for p in $PORTS; do
+            if timeout 5 bash -c "cat < /dev/null > /dev/tcp/$HOST/$p" 2>/dev/null; then
+              BANNER=$(timeout 5 bash -c "exec 3<>/dev/tcp/$HOST/$p; head -c 60 <&3" 2>/dev/null | tr -d '\r\n')
+              echo "  PUERTO $p -> ABIERTO   banner: $BANNER"
+              case "$BANNER" in
+                *SSH*) FOUND="$FOUND $p" ;;
+              esac
+            fi
+          done
+          echo "================================================"
+          if [ -n "$FOUND" ]; then
+            echo ">>> SSH ENCONTRADO EN EL/LOS PUERTO(S): $FOUND <<<"
+          else
+            echo ">>> No se detectó SSH en los puertos probados. <<<"
+          fi
+          echo "================================================"
