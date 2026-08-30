@@ -1,8 +1,8 @@
 name: Deploy a disenoguaro.com
 
 on:
-  # push:                 # se reactiva cuando el deploy funcione
-  #   branches: [master]
+  push:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -12,15 +12,15 @@ jobs:
       - name: Descargar el repositorio
         uses: actions/checkout@v4
 
-      - name: Subir el sitio por SSH (rsync)
-        uses: easingthemes/ssh-deploy@v5.1.0
+      - name: Subir el sitio por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          SOURCE: "site/"
-          TARGET: "public_html/"
-          # -r recursivo, -l enlaces, -t fechas, -D dispositivos, -z comprime, -v detalle, -O sin fechas de carpeta
-          # SIN --delete: nunca borra nada del servidor (protege wordpress-backup y todo lo demás)
-          ARGS: "-rltDzvO"
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          local-dir: ./site/
+          server-dir: ./
+          # No borra nada que no venga del repo (wordpress-backup y demás quedan intactos).
+          dangerous-clean-slate: false
