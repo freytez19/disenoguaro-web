@@ -76,6 +76,11 @@ p{margin:0 0 1rem}
 .btn-ghost{background:transparent;border-color:currentColor;color:inherit}
 .btn-ghost:hover{background:rgba(0,0,0,.06)}
 .section-dark .btn-ghost:hover,.hero .btn-ghost:hover{background:rgba(255,255,255,.12)}
+.btn-ig{
+  color:#fff;
+  background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+}
+.btn-ig:hover{filter:brightness(1.08)}
 
 /* ---------- Header ---------- */
 .site-header{
