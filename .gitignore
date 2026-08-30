@@ -1,0 +1,11 @@
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Entregables generados
+*.zip
+
+# Temporales
+*.tmp
+*.log
