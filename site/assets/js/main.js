@@ -81,36 +81,37 @@
   function pimg(f) {
     return (window.__PORTFOLIO_IMG && window.__PORTFOLIO_IMG[f]) || BASE + f;
   }
-  /* Trabajos publicados en el Instagram @disenoguaro */
+  /* Trabajos publicados en el Instagram @disenoguaro.
+     v: true = el post es un video/reel (se muestra el ícono de play).
+     u: enlace directo a la publicación. */
+  var IG = 'https://www.instagram.com/';
   var GALLERY = [
-    { f: 'medallas-deportivas.jpg',      t: 'Medallas deportivas personalizadas', c: 'Producto' },
-    { f: 'gorras-brandeadas.jpg',        t: 'Gorras brandeadas',                  c: 'Producto' },
-    { f: 'sombrero-visa.jpg',            t: 'Sombrero brandeado — Visa',          c: 'Producto' },
-    { f: 'carnet-pvc.jpg',               t: 'Carnets PVC con impresión full color', c: 'Producto' },
-    { f: 'llaveros-credicefi.jpg',       t: 'Llaveros brandeados — CrediCefi',    c: 'Producto' },
-    { f: 'botellas-brandeadas.jpg',      t: 'Botellas térmicas brandeadas',       c: 'Producto' },
-    { f: 'etiqueta-tequila-padrote.jpg', t: 'Etiqueta — Tequila Padrote',         c: 'Diseño' },
-    { f: 'montaje-evento.jpg',           t: 'Montaje e impresión para evento',    c: 'Evento' },
-    { f: 'taller-gran-formato.jpg',      t: 'Impresión en gran formato en el taller', c: 'Taller' }
+    { f: 'medallas-deportivas.jpg',      t: 'Medallas deportivas personalizadas',    c: 'Producto', v: true,  u: IG + 'disenoguaro/reel/DceF2inw8t3/' },
+    { f: 'gorras-brandeadas.jpg',        t: 'Gorras brandeadas',                     c: 'Producto', v: true,  u: IG + 'disenoguaro/reel/Db82q5hMmhu/' },
+    { f: 'sombrero-visa.jpg',            t: 'Sombrero brandeado — Visa',             c: 'Producto', v: false, u: IG + 'disenoguaro/p/DRXI0YEEXWv/' },
+    { f: 'carnet-pvc.jpg',               t: 'Carnets PVC con impresión full color',  c: 'Producto', v: true,  u: IG + 'disenoguaro/reel/Db38iQLOMgN/' },
+    { f: 'llaveros-credicefi.jpg',       t: 'Llaveros brandeados — CrediCefi',       c: 'Producto', v: false, u: IG + 'disenoguaro/p/DbwilARAE-0/' },
+    { f: 'botellas-brandeadas.jpg',      t: 'Botellas térmicas brandeadas',          c: 'Producto', v: true,  u: IG + 'disenoguaro/reel/DbPBR5MN8fq/' },
+    { f: 'etiqueta-tequila-padrote.jpg', t: 'Etiqueta — Tequila Padrote',            c: 'Diseño',   v: true,  u: IG + 'disenoguaro/reel/DcCgm9EB0k0/' },
+    { f: 'montaje-evento.jpg',           t: 'Montaje e impresión para evento',       c: 'Evento',   v: true,  u: IG + 'pauplz/reel/DbmmUfKJ9Qj/' },
+    { f: 'taller-gran-formato.jpg',      t: 'Impresión en gran formato en el taller', c: 'Taller',  v: false, u: IG + 'disenoguaro/p/DXzTwRhkXBO/' }
   ];
 
   var gallery = document.getElementById('gallery');
-  var items = [];
   if (gallery) {
-    GALLERY.forEach(function (g, i) {
-      var fig = document.createElement('figure');
-      fig.className = 'gallery-item';
-      fig.dataset.cat = g.c;
-      fig.dataset.index = i;
-      fig.setAttribute('tabindex', '0');
-      fig.setAttribute('role', 'button');
-      fig.setAttribute('aria-label', 'Ver: ' + g.t);
-      fig.innerHTML =
+    GALLERY.forEach(function (g) {
+      var a = document.createElement('a');
+      a.className = 'gallery-item';
+      a.href = g.u;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.setAttribute('aria-label', (g.v ? 'Ver video en Instagram: ' : 'Ver en Instagram: ') + g.t);
+      a.innerHTML =
         '<span class="tag">' + g.c + '</span>' +
+        (g.v ? '<span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>' : '') +
         '<img src="' + pimg(g.f) + '" alt="' + g.t + '" loading="lazy" />' +
-        '<figcaption>' + g.t + '</figcaption>';
-      gallery.appendChild(fig);
-      items.push(fig);
+        '<figcaption>' + g.t + '<span class="ig-hint">' + (g.v ? 'Ver video' : 'Ver publicación') + ' ↗</span></figcaption>';
+      gallery.appendChild(a);
     });
   }
 
@@ -181,59 +182,4 @@
     calc();
   }
 
-  /* ---------- Lightbox ---------- */
-  var lb = document.getElementById('lightbox');
-  var lbImg = document.getElementById('lbImg');
-  var lbCap = document.getElementById('lbCap');
-  var current = 0;
-
-  function visibleItems() {
-    return items.filter(function (it) { return !it.classList.contains('hide'); });
-  }
-  function openLb(fig) {
-    var vis = visibleItems();
-    current = vis.indexOf(fig);
-    render(vis);
-    lb.hidden = false;
-    document.body.style.overflow = 'hidden';
-    document.getElementById('lbClose').focus();
-  }
-  function render(vis) {
-    var g = GALLERY[+vis[current].dataset.index];
-    lbImg.src = pimg(g.f);
-    lbImg.alt = g.t;
-    lbCap.textContent = g.t;
-  }
-  function step(d) {
-    var vis = visibleItems();
-    current = (current + d + vis.length) % vis.length;
-    render(vis);
-  }
-  function closeLb() {
-    lb.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  if (gallery && lb) {
-    gallery.addEventListener('click', function (e) {
-      var fig = e.target.closest('.gallery-item');
-      if (fig) openLb(fig);
-    });
-    gallery.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('gallery-item')) {
-        e.preventDefault();
-        openLb(e.target);
-      }
-    });
-    document.getElementById('lbClose').addEventListener('click', closeLb);
-    document.getElementById('lbPrev').addEventListener('click', function () { step(-1); });
-    document.getElementById('lbNext').addEventListener('click', function () { step(1); });
-    lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
-    document.addEventListener('keydown', function (e) {
-      if (lb.hidden) return;
-      if (e.key === 'Escape') closeLb();
-      else if (e.key === 'ArrowLeft') step(-1);
-      else if (e.key === 'ArrowRight') step(1);
-    });
-  }
 })();
