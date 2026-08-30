@@ -134,6 +134,64 @@
     });
   }
 
+  /* ---------- Calculadora de precios ----------
+     Tarifas en pesos dominicanos (RD$) por pie cuadrado.
+     >>> AJUSTAR con los precios reales de Diseño Guaro <<<
+     (Vinil adhesivo = 70 confirmado por Manuel; el resto son estimados) */
+  var RATES = {
+    banner:    { label: 'Banner (lona)',      rate: 45 },
+    vinil:     { label: 'Vinil adhesivo',     rate: 70 },
+    sticker:   { label: 'Sticker troquelado', rate: 120 },
+    onevision: { label: 'Onevision',          rate: 150 }
+  };
+  var MIN_FT2 = 0;    // área mínima a cobrar en pie² (0 = sin mínimo)
+  var MIN_PRICE = 0;  // precio mínimo por trabajo en RD$ (0 = sin mínimo)
+
+  var cMat = document.getElementById('calcMat');
+  var cW = document.getElementById('calcW');
+  var cH = document.getElementById('calcH');
+  if (cMat && cW && cH) {
+    var cArea = document.getElementById('calcArea');
+    var cRate = document.getElementById('calcRate');
+    var cTotal = document.getElementById('calcTotal');
+    var cWa = document.getElementById('calcWa');
+
+    var money = function (n) {
+      return 'RD$ ' + n.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+    var num = function (n) {
+      return n.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    function calc() {
+      var m = RATES[cMat.value] || RATES.vinil;
+      var w = parseFloat(cW.value) || 0;
+      var h = parseFloat(cH.value) || 0;
+      var ft2 = (w * h) / 144;
+      var billed = Math.max(ft2, MIN_FT2);
+      var total = Math.max(billed * m.rate, MIN_PRICE);
+
+      cRate.textContent = money(m.rate) + ' / pie²';
+      if (w <= 0 || h <= 0) {
+        cArea.textContent = '—';
+        cTotal.textContent = money(0);
+      } else {
+        cArea.textContent = num(ft2) + ' pie²';
+        cTotal.textContent = money(total);
+      }
+
+      var msg = 'Hola Diseño Guaro, quiero cotizar: ' + m.label +
+        ' de ' + (w || '?') + ' x ' + (h || '?') + ' pulgadas' +
+        (w > 0 && h > 0 ? ' (~' + num(ft2) + ' pie², estimado web ' + money(total) + ')' : '') + '.';
+      cWa.href = WA + encodeURIComponent(msg);
+    }
+
+    cMat.addEventListener('change', calc);
+    cW.addEventListener('input', calc);
+    cH.addEventListener('input', calc);
+    calc();
+  }
+
   /* ---------- Lightbox ---------- */
   var lb = document.getElementById('lightbox');
   var lbImg = document.getElementById('lbImg');

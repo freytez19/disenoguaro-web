@@ -17,7 +17,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
@@ -32,6 +32,7 @@
 
     <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
       <a href="#servicios">Servicios</a>
+      <a href="#calculadora">Precios</a>
       <a href="#productos">Productos</a>
       <a href="#portafolio">Fotos</a>
       <a href="#contacto">Contacto</a>
@@ -53,22 +54,61 @@
   <!-- ================= INICIO ================= -->
   <section class="hero" id="inicio">
     <div class="hero-bg" aria-hidden="true"></div>
+
+    <svg class="hero-art" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="dg-dots" cx="50%" cy="100%" r="90%">
+          <stop offset="0%" stop-color="rgba(225,27,14,.55)"/>
+          <stop offset="100%" stop-color="rgba(225,27,14,0)"/>
+        </radialGradient>
+        <pattern id="dg-halftone" width="16" height="16" patternUnits="userSpaceOnUse">
+          <circle cx="4" cy="4" r="2.4" fill="url(#dg-dots)"/>
+        </pattern>
+      </defs>
+
+      <!-- trama de medios tonos (impresión) -->
+      <rect x="0" y="250" width="1200" height="210" fill="url(#dg-halftone)"/>
+
+      <!-- Skyline de la Zona Colonial de Santo Domingo -->
+      <g fill="rgba(255,255,255,.06)">
+        <!-- Fortaleza Ozama / Torre del Homenaje -->
+        <path d="M120 460V236h60v224zM118 236h64v-12h-10v-10h-12v10h-10v-10h-12v10h-10z"/>
+        <!-- Catedral Primada de América -->
+        <path d="M250 460V262h150v198zM248 262 325 210 402 262zM368 460V214h34v246zM366 214h38v-12h-19l-19 12z"/>
+        <!-- Alcázar de Colón -->
+        <path d="M470 460V300h210v160zM470 300h210v-16H470zM476 284h16v-14h-16zm26 0h16v-14h-16zm26 0h16v-14h-16zm26 0h16v-14h-16zm26 0h16v-14h-16zm26 0h16v-14h-16zm26 0h16v-14h-16z"/>
+        <!-- Panteón Nacional (cúpula + frontón) -->
+        <path d="M720 460V300h150v160zM712 300 795 244 878 300zM795 244a20 20 0 0 1 0-40 20 20 0 0 1 0 40zM791 204v-16h8v16z"/>
+        <!-- Faro a Colón (monumento escalonado) -->
+        <path d="M930 460v-70h250v70zM952 390v-34h206v34zM978 356v-30h154v30zM1004 326v-24h102v24zM1044 302v-96h22v96zM1030 220h50v14h-50z"/>
+      </g>
+
+      <!-- palmeras -->
+      <g fill="none" stroke="rgba(255,255,255,.10)" stroke-width="3" stroke-linecap="round">
+        <path d="M60 460V346"/>
+        <path d="M60 346c-16-14-40-14-58-4 18-4 40-2 58 12 0-22 12-42 34-52-18 4-28 24-34 44z"/>
+        <path d="M1140 460V352"/>
+        <path d="M1140 352c16-14 40-14 58-4-18-4-40-2-58 12 0-22-12-42-34-52 18 4 28 24 34 44z"/>
+      </g>
+    </svg>
+
     <div class="container hero-inner">
-      <p class="eyebrow">Estudio de diseño e impresión · Santo Domingo, RD</p>
-      <h1>Tu marca, <span class="hl">impresa</span> como te la imaginas.</h1>
+      <p class="eyebrow">Imprenta y diseño · Santo Domingo, RD</p>
+      <h1>Tu idea, <span class="hl">impresa</span> como te la imaginas.</h1>
       <p class="lead">
-        Diseño gráfico, gran formato y productos personalizados en un solo lugar.
-        Logos, rótulos, banners, invitaciones, stickers, tazas, camisetas y mucho más.
+        Somos el taller de barrio con acabado de estudio. Rótulos, banners, invitaciones,
+        stickers, tarjetas y productos personalizados — con la asesoría de siempre y la
+        entrega cuando la necesitas.
       </p>
       <div class="hero-cta">
         <a href="https://wa.me/18293768157?text=Hola%20Dise%C3%B1o%20Guaro%2C%20quiero%20cotizar%20un%20trabajo."
            class="btn btn-wa btn-lg" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
-        <a href="#portafolio" class="btn btn-ghost btn-lg">Ver trabajos</a>
+        <a href="#calculadora" class="btn btn-ghost btn-lg">Calcular un precio</a>
       </div>
       <ul class="hero-badges">
-        <li>Entrega rápida</li>
+        <li>Trato cercano</li>
         <li>Arte + impresión</li>
-        <li>Pedidos al por mayor</li>
+        <li>Entrega rápida</li>
       </ul>
     </div>
   </section>
@@ -78,16 +118,11 @@
     <div class="container">
       <header class="section-head">
         <p class="kicker">Servicios</p>
-        <h2>Diseñamos e imprimimos todo lo que tu proyecto necesita</h2>
-        <p class="section-sub">Del concepto al material terminado. Estos son los servicios que más nos piden.</p>
+        <h2>Imprimimos lo que tu proyecto necesita</h2>
+        <p class="section-sub">Te acompañamos del concepto al material listo para entregar. Esto es lo que más nos piden.</p>
       </header>
 
       <div class="grid services-grid">
-        <article class="card service">
-          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 15.4 6.8 18.1l1-5.8L3.5 8.2l5.9-.9z"/></svg></span>
-          <h3>Identidad de marca</h3>
-          <p>Logotipos, manual de marca, papelería y aplicaciones para que tu negocio se vea profesional.</p>
-        </article>
         <article class="card service">
           <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
           <h3>Invitaciones</h3>
@@ -104,11 +139,6 @@
           <p>Banners, vallas, roll-ups y fondos fotográficos para ferias, activaciones y celebraciones.</p>
         </article>
         <article class="card service">
-          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg></span>
-          <h3>Gran formato</h3>
-          <p>Impresión de alta resolución en lona, coroplast, foam y microperforado a la medida.</p>
-        </article>
-        <article class="card service">
           <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4v10l-6 6H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1zM14 20v-5a1 1 0 0 1 1-1h5"/></svg></span>
           <h3>Stickers y troquelados</h3>
           <p>Etiquetas, stickers en vinil o papel, cortes especiales y sellos para producto.</p>
@@ -117,11 +147,6 @@
           <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h5"/></svg></span>
           <h3>Tarjetas y papelería</h3>
           <p>Tarjetas de presentación, volantes, brochures, menús y cartas para tu negocio.</p>
-        </article>
-        <article class="card service">
-          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.6 10.5l6.8-3M8.6 13.5l6.8 3"/></svg></span>
-          <h3>Redes sociales</h3>
-          <p>Piezas para Instagram y Facebook: posts, historias, promociones y catálogos digitales.</p>
         </article>
         <article class="card service">
           <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l-5 4 3 3 2-1.5V21h6V8.5L19 10l3-3-5-4a5 5 0 0 1-9 0z"/></svg></span>
@@ -133,6 +158,53 @@
       <div class="section-foot">
         <a href="https://wa.me/18293768157?text=Hola%20Dise%C3%B1o%20Guaro%2C%20necesito%20un%20servicio%20de%20dise%C3%B1o%2Fimpresi%C3%B3n."
            class="btn btn-dark" target="_blank" rel="noopener">Consultar un servicio</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALCULADORA ================= -->
+  <section class="section section-alt" id="calculadora">
+    <div class="container">
+      <header class="section-head">
+        <p class="kicker">Calculadora</p>
+        <h2>Calcula el precio de tu impresión</h2>
+        <p class="section-sub">
+          Elige el material y la medida y te damos un estimado al instante.
+          El precio final lo confirmamos por WhatsApp.
+        </p>
+      </header>
+
+      <div class="calc">
+        <form class="calc-form" id="calcForm" autocomplete="off">
+          <div class="calc-field">
+            <label for="calcMat">Material</label>
+            <select id="calcMat">
+              <option value="banner">Banner (lona)</option>
+              <option value="vinil" selected>Vinil adhesivo</option>
+              <option value="sticker">Sticker troquelado</option>
+              <option value="onevision">Onevision</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label for="calcW">Ancho (pulgadas)</label>
+            <input id="calcW" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
+          </div>
+          <div class="calc-field">
+            <label for="calcH">Alto (pulgadas)</label>
+            <input id="calcH" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
+          </div>
+        </form>
+
+        <div class="calc-result" aria-live="polite">
+          <div class="calc-line"><span>Área</span><strong id="calcArea">—</strong></div>
+          <div class="calc-line"><span>Tarifa por pie²</span><strong id="calcRate">—</strong></div>
+          <div class="calc-total"><span>Precio estimado</span><strong id="calcTotal">RD$&nbsp;0.00</strong></div>
+          <a class="btn btn-wa btn-block" id="calcWa" target="_blank" rel="noopener" href="https://wa.me/18293768157">Cotizar este trabajo</a>
+          <p class="calc-note">
+            Estimado según tarifa por pie cuadrado. No incluye diseño de arte, instalación
+            ni acabados especiales (ojales, laminado, corte de contorno).
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -250,6 +322,7 @@
     <p class="footer-tag">Diseño gráfico · Impresión · Productos personalizados</p>
     <nav class="footer-nav" aria-label="Pie de página">
       <a href="#servicios">Servicios</a>
+      <a href="#calculadora">Precios</a>
       <a href="#productos">Productos</a>
       <a href="#portafolio">Fotos</a>
       <a href="#contacto">Contacto</a>
