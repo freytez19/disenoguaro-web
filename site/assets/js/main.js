@@ -151,9 +151,10 @@
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var cards = Array.prototype.slice.call(vgrid.querySelectorAll('.vcard'));
 
-    function buildVideo(card) {
-      if (card.__video) return card.__video;
-      var v = document.createElement('video');
+    function getVideo(card) {
+      var v = card.querySelector('video');
+      if (v) return v;
+      v = document.createElement('video');
       v.src = card.dataset.src;
       v.muted = true;
       v.loop = true;
@@ -164,45 +165,44 @@
       if (poster) v.poster = poster.currentSrc || poster.src;
       v.addEventListener('loadeddata', function () { v.classList.add('on'); });
       card.appendChild(v);
-      card.__video = v;
       return v;
     }
 
-    // Tocar un video: sonido + controles (y silencia los demás)
+    function playMuted(card) {
+      var v = getVideo(card);
+      card.classList.add('playing');
+      if (v.muted) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    }
+
+    // Tocar una tarjeta: activa el sonido (y silencia las demás)
     vgrid.addEventListener('click', function (e) {
       var card = e.target.closest('.vcard');
-      if (!card) return;
-      var v = buildVideo(card);
-      if (v.muted) {
-        cards.forEach(function (c) { if (c.__video && c !== card) { c.__video.muted = true; c.__video.controls = false; } });
-        v.muted = false;
-        v.controls = true;
-        card.classList.add('sound');
-        v.play().catch(function () {});
-      }
+      if (!card || card.classList.contains('sound')) return;
+      vgrid.querySelectorAll('video').forEach(function (o) { o.muted = true; o.controls = false; });
+      cards.forEach(function (c) { c.classList.remove('sound'); });
+      var v = getVideo(card);
+      v.muted = false;
+      v.controls = true;
+      card.classList.add('sound', 'playing');
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
     });
 
-    if (reduce) {
-      // Sin autoplay: se queda el póster; al tocar, se ve con controles.
-      return;
-    }
+    if (reduce) return; // sin autoplay; el póster queda y al tocar se ve con controles
 
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          var card = en.target;
-          if (en.isIntersecting) {
-            var v = buildVideo(card);
-            card.classList.add('playing');
-            if (v.muted) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-          } else if (card.__video) {
-            card.__video.pause();
+          if (en.isIntersecting) playMuted(en.target);
+          else {
+            var v = en.target.querySelector('video');
+            if (v) v.pause();
           }
         });
       }, { threshold: 0.5 });
       cards.forEach(function (c) { io.observe(c); });
     } else {
-      cards.forEach(function (c) { var v = buildVideo(c); c.classList.add('playing'); v.play().catch(function () {}); });
+      cards.forEach(playMuted);
     }
   }
 })();
