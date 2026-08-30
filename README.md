@@ -18,14 +18,12 @@ site/
 
 1. Entra a **cPanel → Administrador de archivos**.
 2. Abre la carpeta **`public_html`**.
-3. Sube el archivo **`disenoguaro-web.zip`** (botón *Cargar*).
-4. Selecciónalo → clic derecho → **Extraer**.
-5. Mueve el **contenido de la carpeta `site/`** (no la carpeta, sino lo que está adentro:
-   `index.html` y `assets/`) directamente dentro de `public_html`.
-6. Borra el zip y la carpeta `site` vacía.
+3. Si ya hay un `index.html` de prueba (de BanaHosting), bórralo.
+4. Sube el archivo **`disenoguaro-web.zip`** (botón *Cargar*).
+5. De vuelta en `public_html`, selecciona el zip → clic derecho → **Extraer**.
+   Quedan `index.html` y la carpeta `assets/` directamente dentro de `public_html`.
+6. Borra el `disenoguaro-web.zip`.
 7. Abre `https://disenoguaro.com` — listo.
-
-> Si `public_html` ya tiene un `index.html` de prueba, bórralo antes.
 
 ## Editar contenido
 
