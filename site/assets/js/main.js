@@ -143,29 +143,66 @@
     calc();
   }
 
-  /* ---------- Página de trabajos: reproducir video al hacer clic ---------- */
+  /* ---------- Página de trabajos: muro de videos ----------
+     Cada video se reproduce solo (sin sonido, en bucle) cuando entra en pantalla.
+     Al tocarlo: activa el sonido y muestra los controles. */
   var vgrid = document.getElementById('videoGrid');
   if (vgrid) {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var cards = Array.prototype.slice.call(vgrid.querySelectorAll('.vcard'));
+
+    function buildVideo(card) {
+      if (card.__video) return card.__video;
+      var v = document.createElement('video');
+      v.src = card.dataset.src;
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      v.setAttribute('playsinline', '');
+      v.setAttribute('preload', 'none');
+      var poster = card.querySelector('img');
+      if (poster) v.poster = poster.currentSrc || poster.src;
+      v.addEventListener('loadeddata', function () { v.classList.add('on'); });
+      card.appendChild(v);
+      card.__video = v;
+      return v;
+    }
+
+    // Tocar un video: sonido + controles (y silencia los demás)
     vgrid.addEventListener('click', function (e) {
       var card = e.target.closest('.vcard');
-      if (!card || card.classList.contains('playing')) return;
-
-      // pausar cualquier otro que esté sonando
-      vgrid.querySelectorAll('video').forEach(function (v) { v.pause(); });
-
-      var src = card.dataset.src;
-      var video = document.createElement('video');
-      video.src = src;
-      video.controls = true;
-      video.autoplay = true;
-      video.playsInline = true;
-      video.setAttribute('preload', 'auto');
-      var poster = card.querySelector('img');
-      if (poster) video.poster = poster.currentSrc || poster.src;
-
-      card.classList.add('playing');
-      card.appendChild(video);
-      video.play().catch(function () {});
+      if (!card) return;
+      var v = buildVideo(card);
+      if (v.muted) {
+        cards.forEach(function (c) { if (c.__video && c !== card) { c.__video.muted = true; c.__video.controls = false; } });
+        v.muted = false;
+        v.controls = true;
+        card.classList.add('sound');
+        v.play().catch(function () {});
+      }
     });
+
+    if (reduce) {
+      // Sin autoplay: se queda el póster; al tocar, se ve con controles.
+      return;
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          var card = en.target;
+          if (en.isIntersecting) {
+            var v = buildVideo(card);
+            card.classList.add('playing');
+            if (v.muted) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+          } else if (card.__video) {
+            card.__video.pause();
+          }
+        });
+      }, { threshold: 0.5 });
+      cards.forEach(function (c) { io.observe(c); });
+    } else {
+      cards.forEach(function (c) { var v = buildVideo(c); c.classList.add('playing'); v.play().catch(function () {}); });
+    }
   }
 })();
