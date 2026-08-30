@@ -12,6 +12,15 @@ jobs:
       - name: Descargar el repositorio
         uses: actions/checkout@v4
 
+      - name: Versionar CSS y JS (para que el navegador tome los cambios al instante)
+        run: |
+          V="${GITHUB_SHA::8}"
+          for f in site/index.html site/trabajos.html; do
+            sed -i "s#assets/css/style\.css#assets/css/style.css?v=$V#g; s#assets/js/main\.js#assets/js/main.js?v=$V#g" "$f"
+          done
+          echo "Versión aplicada: $V"
+          grep -oE "assets/(css|js)/[a-z]+\.[a-z]+\?v=[a-f0-9]+" site/index.html || true
+
       - name: Subir el sitio por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
