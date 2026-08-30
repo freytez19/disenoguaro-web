@@ -10,3 +10,5 @@ preview-artifact.html
 # Temporales
 *.tmp
 *.log
+
+site/assets/ig-raw/

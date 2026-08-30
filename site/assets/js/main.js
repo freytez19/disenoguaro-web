@@ -81,22 +81,18 @@
   function pimg(f) {
     return (window.__PORTFOLIO_IMG && window.__PORTFOLIO_IMG[f]) || BASE + f;
   }
+  /* Trabajos publicados en el Instagram @disenoguaro */
   var GALLERY = [
-    { f: 'logo-agro-avila.jpg',            t: 'Logotipo — Agro Ávila',            c: 'marca' },
-    { f: 'logo-autos-andrea.jpg',          t: 'Logotipo — Autos Andrea',          c: 'marca' },
-    { f: 'logo-seguridad.jpg',             t: 'Logotipo — Seguridad & Automatización', c: 'marca' },
-    { f: 'logo-miracle-dental.jpg',        t: 'Logotipo — Miracle Dental Center',  c: 'marca' },
-    { f: 'identidad-nh-arquitectos.jpg',   t: 'Identidad — NH Arquitectos',        c: 'marca' },
-    { f: 'tarjetas-budda-ink.jpg',         t: 'Tarjeta de presentación — Budda Ink', c: 'impresos' },
-    { f: 'menu-rincon-venezolano.jpg',     t: 'Menú — Rincón Venezolano',          c: 'impresos' },
-    { f: 'flyer-beauty-studio.jpg',        t: 'Lista de precios — Beauty Studio',  c: 'impresos' },
-    { f: 'flyer-roll-race.jpg',            t: 'Flyer de evento — Roll Race',       c: 'eventos' },
-    { f: 'backpanel-messi.jpg',            t: 'Back panel — cumpleaños temático',  c: 'eventos' },
-    { f: 'backpanel-navidad.jpg',          t: 'Back panel — evento navideño',      c: 'eventos' },
-    { f: 'vinil-juan-valdez.jpg',          t: 'Vinil y stickers — Juan Valdez',    c: 'vinil' },
-    { f: 'post-san-valentin.jpg',          t: 'Post para redes — promoción',       c: 'redes' }
+    { f: 'medallas-deportivas.jpg',      t: 'Medallas deportivas personalizadas', c: 'Producto' },
+    { f: 'gorras-brandeadas.jpg',        t: 'Gorras brandeadas',                  c: 'Producto' },
+    { f: 'sombrero-visa.jpg',            t: 'Sombrero brandeado — Visa',          c: 'Producto' },
+    { f: 'carnet-pvc.jpg',               t: 'Carnets PVC con impresión full color', c: 'Producto' },
+    { f: 'llaveros-credicefi.jpg',       t: 'Llaveros brandeados — CrediCefi',    c: 'Producto' },
+    { f: 'botellas-brandeadas.jpg',      t: 'Botellas térmicas brandeadas',       c: 'Producto' },
+    { f: 'etiqueta-tequila-padrote.jpg', t: 'Etiqueta — Tequila Padrote',         c: 'Diseño' },
+    { f: 'montaje-evento.jpg',           t: 'Montaje e impresión para evento',    c: 'Evento' },
+    { f: 'taller-gran-formato.jpg',      t: 'Impresión en gran formato en el taller', c: 'Taller' }
   ];
-  var CAT_LABEL = { marca: 'Identidad', impresos: 'Impresos', eventos: 'Eventos', vinil: 'Vinil', redes: 'Redes' };
 
   var gallery = document.getElementById('gallery');
   var items = [];
@@ -110,7 +106,7 @@
       fig.setAttribute('role', 'button');
       fig.setAttribute('aria-label', 'Ver: ' + g.t);
       fig.innerHTML =
-        '<span class="tag">' + (CAT_LABEL[g.c] || '') + '</span>' +
+        '<span class="tag">' + g.c + '</span>' +
         '<img src="' + pimg(g.f) + '" alt="' + g.t + '" loading="lazy" />' +
         '<figcaption>' + g.t + '</figcaption>';
       gallery.appendChild(fig);
@@ -118,34 +114,16 @@
     });
   }
 
-  /* ---------- Filtros ---------- */
-  var filters = document.getElementById('filters');
-  if (filters) {
-    filters.addEventListener('click', function (e) {
-      var b = e.target.closest('.filter');
-      if (!b) return;
-      filters.querySelectorAll('.filter').forEach(function (x) { x.classList.remove('is-active'); });
-      b.classList.add('is-active');
-      var f = b.dataset.filter;
-      items.forEach(function (it) {
-        var show = f === 'all' || it.dataset.cat === f;
-        it.classList.toggle('hide', !show);
-      });
-    });
-  }
-
   /* ---------- Calculadora de precios ----------
-     Tarifas en pesos dominicanos (RD$) por pie cuadrado.
-     >>> AJUSTAR con los precios reales de Diseño Guaro <<<
-     (Vinil adhesivo = 70 confirmado por Manuel; el resto son estimados) */
+     Tarifas de Diseño Guaro en pesos dominicanos (RD$) por pie cuadrado.
+     'min' = monto mínimo por trabajo para ese material (0 = sin mínimo). */
   var RATES = {
-    banner:    { label: 'Banner (lona)',      rate: 45 },
-    vinil:     { label: 'Vinil adhesivo',     rate: 70 },
-    sticker:   { label: 'Sticker troquelado', rate: 120 },
-    onevision: { label: 'Onevision',          rate: 150 }
+    banner:    { label: 'Banner (lona)',      rate: 70,  min: 0 },
+    vinil:     { label: 'Vinil adhesivo',     rate: 70,  min: 0 },
+    sticker:   { label: 'Sticker troquelado', rate: 90,  min: 500 },
+    onevision: { label: 'Onevision',          rate: 130, min: 0 }
   };
-  var MIN_FT2 = 0;    // área mínima a cobrar en pie² (0 = sin mínimo)
-  var MIN_PRICE = 0;  // precio mínimo por trabajo en RD$ (0 = sin mínimo)
+  var MIN_FT2 = 0; // área mínima a cobrar en pie² (0 = sin mínimo)
 
   var cMat = document.getElementById('calcMat');
   var cW = document.getElementById('calcW');
@@ -163,13 +141,18 @@
       return n.toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
+    var cNote = document.querySelector('.calc-note');
+    var baseNote = cNote ? cNote.textContent : '';
+
     function calc() {
       var m = RATES[cMat.value] || RATES.vinil;
       var w = parseFloat(cW.value) || 0;
       var h = parseFloat(cH.value) || 0;
       var ft2 = (w * h) / 144;
       var billed = Math.max(ft2, MIN_FT2);
-      var total = Math.max(billed * m.rate, MIN_PRICE);
+      var raw = billed * m.rate;
+      var total = Math.max(raw, m.min || 0);
+      var hitMin = (m.min && raw < m.min && w > 0 && h > 0);
 
       cRate.textContent = money(m.rate) + ' / pie²';
       if (w <= 0 || h <= 0) {
@@ -178,6 +161,12 @@
       } else {
         cArea.textContent = num(ft2) + ' pie²';
         cTotal.textContent = money(total);
+      }
+
+      if (cNote) {
+        cNote.textContent = hitMin
+          ? 'Aplica el monto mínimo de ' + money(m.min) + ' para ' + m.label.toLowerCase() + '. ' + baseNote
+          : baseNote;
       }
 
       var msg = 'Hola Diseño Guaro, quiero cotizar: ' + m.label +

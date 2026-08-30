@@ -17,14 +17,14 @@
   --sombra:0 10px 30px rgba(0,0,0,.10);
   --sombra-lg:0 24px 60px rgba(0,0,0,.18);
   --ancho:1140px;
-  /* Display: "Posterama Text Bold" (fuente de pago — Manuel debe subir el webfont
-     con licencia; mientras tanto se usa Poppins 800 con el mismo tratamiento). */
-  --display:'Posterama Text','Poppins',system-ui,'Segoe UI',sans-serif;
+  /* Display: Archivo Black — negra, geométrica, cercana al peso del logo.
+     (Posterama Text Bold es de pago: si Manuel sube el .woff2 con licencia
+     web, se antepone en --display y se descomenta el @font-face de abajo.) */
+  --display:'Archivo Black','Poppins',system-ui,'Segoe UI',sans-serif;
   --texto:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
 
-/* Cuando exista el webfont con licencia, colocar los archivos en
-   assets/fonts/ y descomentar:
+/*
 @font-face{
   font-family:'Posterama Text';
   src:url('../fonts/PosteramaText-Bold.woff2') format('woff2');
@@ -46,6 +46,7 @@ body{
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 h1,h2,h3{margin:0;line-height:1.05;letter-spacing:.01em}
+.hero h1,.section-head h2,.contact-cta-card h3{font-synthesis:none}
 p{margin:0 0 1rem}
 
 .container{width:100%;max-width:var(--ancho);margin:0 auto;padding:0 22px}
@@ -127,8 +128,8 @@ p{margin:0 0 1rem}
 }
 .hero h1{
   font-family:var(--display);
-  font-size:clamp(2.3rem,5.6vw,4.2rem);
-  font-weight:800;text-transform:uppercase;letter-spacing:-.01em;line-height:1;
+  font-size:clamp(2.1rem,5.2vw,3.9rem);
+  font-weight:400;text-transform:uppercase;letter-spacing:-.005em;line-height:1.02;
   text-wrap:balance;
   margin-bottom:20px;
 }
@@ -153,8 +154,8 @@ p{margin:0 0 1rem}
 }
 .kicker-light{color:#ff9d94}
 .section-head h2{
-  font-family:var(--display);font-weight:800;text-transform:uppercase;
-  font-size:clamp(1.6rem,3.2vw,2.3rem);letter-spacing:-.01em;line-height:1.05;
+  font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.5rem,3vw,2.15rem);letter-spacing:-.005em;line-height:1.1;
   text-wrap:balance;margin-bottom:14px;
 }
 .section-sub{color:var(--gris);font-size:1.05rem}
@@ -233,8 +234,8 @@ p{margin:0 0 1rem}
 }
 .calc-total span{font-size:.95rem;color:#c9c9c9}
 .calc-total strong{
-  font-family:var(--display);font-weight:800;letter-spacing:-.01em;
-  font-size:1.9rem;color:var(--rojo);font-variant-numeric:tabular-nums;
+  font-family:var(--display);font-weight:400;letter-spacing:-.005em;
+  font-size:1.75rem;color:var(--rojo);font-variant-numeric:tabular-nums;
 }
 .calc-note{font-size:.78rem;color:#9a9a9a;margin:6px 0 0;line-height:1.5}
 
@@ -252,7 +253,7 @@ p{margin:0 0 1rem}
 .gallery{grid-template-columns:repeat(3,1fr)}
 .gallery-item{
   position:relative;border-radius:var(--radio);overflow:hidden;cursor:pointer;
-  background:var(--hueso);border:1px solid var(--linea);aspect-ratio:4/3;
+  background:var(--hueso);border:1px solid var(--linea);aspect-ratio:1/1;
 }
 .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
 .gallery-item:hover img{transform:scale(1.05)}
@@ -290,7 +291,7 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
   background:var(--rojo);color:#fff;border-radius:var(--radio);
   padding:32px 28px;box-shadow:var(--sombra-lg);position:sticky;top:96px;
 }
-.contact-cta-card h3{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;font-size:1.5rem;margin-bottom:8px}
+.contact-cta-card h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:-.005em;font-size:1.4rem;margin-bottom:8px}
 .contact-cta-card p{color:#ffe4e1;margin-bottom:20px}
 .contact-cta-card .btn-ghost{color:#fff;margin-top:10px}
 
