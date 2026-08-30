@@ -252,27 +252,69 @@ p{margin:0 0 1rem}
 .product .p-link::after{content:"→";transition:transform .18s ease}
 .product:hover .p-link::after{transform:translateX(4px)}
 
-/* ---------- Galería ---------- */
-.gallery{grid-template-columns:repeat(3,1fr)}
-.gallery-item{
-  position:relative;border-radius:var(--radio);overflow:hidden;cursor:pointer;
-  background:var(--hueso);border:1px solid var(--linea);aspect-ratio:1/1;
+/* ---------- Teaser de trabajos (portada) ---------- */
+.trabajos-teaser{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;
+  border-radius:var(--radio);overflow:hidden;
 }
-.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
-.gallery-item:hover img{transform:scale(1.05)}
-.gallery-item figcaption{
-  position:absolute;left:0;right:0;bottom:0;
-  padding:26px 16px 12px;color:#fff;font-weight:600;font-size:.9rem;
-  background:linear-gradient(to top, rgba(0,0,0,.78), transparent);
-  opacity:0;transform:translateY(8px);transition:.25s;
+.trabajos-teaser img{
+  width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;
+  border:1px solid var(--linea);transition:transform .3s ease;
 }
-.gallery-item:hover figcaption,.gallery-item:focus-visible figcaption{opacity:1;transform:none}
-.gallery-item .tag{
-  position:absolute;top:10px;left:10px;background:var(--rojo);color:#fff;
-  font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
-  padding:4px 9px;border-radius:6px;
+.trabajos-teaser:hover img{transform:scale(1.03)}
+.tt-cta{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(21,21,21,.55);color:#fff;font-family:var(--display);
+  text-transform:uppercase;letter-spacing:-.005em;font-size:clamp(1.1rem,2.6vw,1.7rem);
+  gap:12px;opacity:0;transition:opacity .25s ease;
 }
-.gallery-item.hide{display:none}
+.trabajos-teaser:hover .tt-cta,.trabajos-teaser:focus-visible .tt-cta{opacity:1}
+
+/* ---------- Página Trabajos ---------- */
+.trabajos-main{position:relative;background:var(--tinta);color:#fff;overflow:hidden;min-height:70vh}
+.trabajos-wm{
+  position:absolute;inset:-20% -20% -20% -20%;pointer-events:none;z-index:0;
+  background-image:url('../img/logo-disenoguaro-white.png');
+  background-repeat:space;background-size:230px auto;
+  transform:rotate(-14deg);opacity:.045;
+}
+.trabajos-inner{position:relative;z-index:1;padding:70px 22px 90px}
+.trabajos-head{max-width:640px;margin:0 auto 44px;text-align:center}
+.trabajos-head h1{
+  font-family:var(--display);font-weight:400;text-transform:uppercase;
+  letter-spacing:-.005em;line-height:1.05;font-size:clamp(1.9rem,4.4vw,3rem);
+  text-wrap:balance;margin-bottom:14px;
+}
+.trabajos-sub{color:#c7c7c7;font-size:1.05rem}
+.trabajos-foot{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:52px}
+
+.video-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:var(--ancho);margin:0 auto;
+}
+.vcard{
+  position:relative;border-radius:16px;overflow:hidden;cursor:pointer;
+  background:#000;border:1px solid #2c2c2c;aspect-ratio:9/16;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+.vcard img,.vcard video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+}
+.vcard video{object-fit:contain;background:#000;z-index:3}
+.vcard .vplay{
+  position:absolute;inset:0;margin:auto;width:66px;height:66px;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55);color:#fff;border:0;border-radius:50%;cursor:pointer;
+  transition:transform .18s ease, background .18s ease;
+}
+.vcard .vplay svg{margin-left:4px}
+.vcard:hover .vplay{transform:scale(1.09);background:var(--rojo)}
+.vcard .vcap{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:34px 14px 12px;color:#fff;font-weight:600;font-size:.86rem;line-height:1.3;
+  background:linear-gradient(to top, rgba(0,0,0,.85), transparent);
+}
+.vcard.playing .vplay,.vcard.playing .vcap,.vcard.playing img{opacity:0;pointer-events:none}
 
 /* ---------- Contacto ---------- */
 .contact-inner{display:grid;grid-template-columns:1.3fr .9fr;gap:48px;align-items:start}
@@ -316,25 +358,6 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
 }
 .wa-float:hover{transform:scale(1.08);background:var(--wa-osc)}
 
-/* ---------- Lightbox ---------- */
-.lightbox{
-  position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.9);padding:30px;
-}
-.lightbox[hidden]{display:none}
-.lb-figure{margin:0;max-width:min(1000px,92vw);max-height:88vh;display:flex;flex-direction:column;gap:12px}
-.lb-figure img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:8px;margin:0 auto}
-.lb-figure figcaption{color:#eee;text-align:center;font-size:.95rem}
-.lb-close,.lb-nav{
-  position:absolute;background:rgba(255,255,255,.12);color:#fff;border:0;cursor:pointer;
-  border-radius:50%;width:48px;height:48px;font-size:1.8rem;line-height:1;
-  display:flex;align-items:center;justify-content:center;transition:background .18s;
-}
-.lb-close:hover,.lb-nav:hover{background:rgba(255,255,255,.28)}
-.lb-close{top:20px;right:20px;font-size:2rem}
-.lb-prev{left:16px;top:50%;transform:translateY(-50%)}
-.lb-next{right:16px;top:50%;transform:translateY(-50%)}
-
 /* ---------- Responsive ---------- */
 @media (max-width:980px){
   .hero-inner{grid-template-columns:1fr;gap:34px;padding:72px 22px 84px}
@@ -345,7 +368,8 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
 @media (max-width:960px){
   .services-grid{grid-template-columns:repeat(2,1fr)}
   .products-grid{grid-template-columns:repeat(2,1fr)}
-  .gallery{grid-template-columns:repeat(2,1fr)}
+  .video-grid{grid-template-columns:repeat(2,1fr)}
+  .trabajos-teaser{grid-template-columns:repeat(2,1fr)}
   .contact-inner{grid-template-columns:1fr;gap:32px}
   .contact-cta-card{position:static}
 }
@@ -365,9 +389,11 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
   .nav-toggle{display:flex}
   .hero-inner{padding:64px 22px 76px}
   .hero-cta .btn{flex:1 1 100%}
+  .trabajos-foot .btn{flex:1 1 100%}
 }
 @media (max-width:460px){
-  .services-grid,.products-grid,.gallery{grid-template-columns:1fr}
+  .services-grid,.products-grid{grid-template-columns:1fr}
+  .video-grid{grid-template-columns:1fr;max-width:380px}
   .hc-row{grid-template-columns:1fr}
 }
 
