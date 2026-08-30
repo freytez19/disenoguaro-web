@@ -64,10 +64,17 @@
         <pattern id="dg-halftone" width="16" height="16" patternUnits="userSpaceOnUse">
           <circle cx="4" cy="4" r="2.4" fill="url(#dg-dots)"/>
         </pattern>
+        <linearGradient id="dg-scan" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="rgba(225,27,14,0)"/>
+          <stop offset="0.5" stop-color="rgba(255,130,120,.55)"/>
+          <stop offset="1" stop-color="rgba(225,27,14,0)"/>
+        </linearGradient>
       </defs>
 
-      <!-- trama de medios tonos (impresión) -->
-      <rect x="0" y="250" width="1200" height="210" fill="url(#dg-halftone)"/>
+      <!-- trama de medios tonos (impresión), en movimiento -->
+      <g class="halftone">
+        <rect x="-20" y="230" width="1240" height="260" fill="url(#dg-halftone)"/>
+      </g>
 
       <!-- Skyline de la Zona Colonial de Santo Domingo -->
       <g fill="rgba(255,255,255,.06)">
@@ -90,26 +97,67 @@
         <path d="M1140 460V352"/>
         <path d="M1140 352c16-14 40-14 58-4-18-4-40-2-58 12 0-22-12-42-34-52 18 4 28 24 34 44z"/>
       </g>
+
+      <!-- cabezal de impresión que recorre la portada -->
+      <rect class="scan" x="0" y="0" width="64" height="460" fill="url(#dg-scan)"/>
     </svg>
 
     <div class="container hero-inner">
-      <p class="eyebrow">Imprenta y diseño · Santo Domingo, RD</p>
-      <h1>Tu idea, <span class="hl">impresa</span> como te la imaginas.</h1>
-      <p class="lead">
-        Somos el taller de barrio con acabado de estudio. Rótulos, banners, invitaciones,
-        stickers, tarjetas y productos personalizados — con la asesoría de siempre y la
-        entrega cuando la necesitas.
-      </p>
-      <div class="hero-cta">
-        <a href="https://wa.me/18293768157?text=Hola%20Dise%C3%B1o%20Guaro%2C%20quiero%20cotizar%20un%20trabajo."
-           class="btn btn-wa btn-lg" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
-        <a href="#calculadora" class="btn btn-ghost btn-lg">Calcular un precio</a>
+      <div class="hero-copy">
+        <p class="eyebrow">Santo Domingo, RD.</p>
+        <h1>Tu idea, <span class="hl">impresa</span> como te la imaginas.</h1>
+        <p class="lead">
+          Somos expertos en solucionar tus ideas personalizadas, con la asesoría
+          humana de siempre y la entrega a tiempo.
+        </p>
+        <div class="hero-cta">
+          <a href="https://wa.me/18293768157?text=Hola%20Dise%C3%B1o%20Guaro%2C%20quiero%20cotizar%20un%20trabajo."
+             class="btn btn-wa btn-lg" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+          <a href="#portafolio" class="btn btn-ghost btn-lg">Ver trabajos</a>
+        </div>
+        <ul class="hero-badges">
+          <li>Asesoría humana</li>
+          <li>Arte + impresión</li>
+          <li>Entrega a tiempo</li>
+        </ul>
       </div>
-      <ul class="hero-badges">
-        <li>Trato cercano</li>
-        <li>Arte + impresión</li>
-        <li>Entrega rápida</li>
-      </ul>
+
+      <aside class="hero-calc" id="calculadora" aria-label="Calculadora de precios de impresión">
+        <div class="hc-head">
+          <span class="hc-kicker">Calculadora</span>
+          <h2>Calcula tu impresión</h2>
+        </div>
+        <form autocomplete="off">
+          <div class="hc-field">
+            <label for="calcMat">Material</label>
+            <select id="calcMat">
+              <option value="banner">Banner (lona)</option>
+              <option value="vinil" selected>Vinil adhesivo</option>
+              <option value="sticker">Sticker troquelado</option>
+              <option value="onevision">Onevision</option>
+            </select>
+          </div>
+          <div class="hc-row">
+            <div class="hc-field">
+              <label for="calcW">Ancho (pulg)</label>
+              <input id="calcW" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
+            </div>
+            <div class="hc-field">
+              <label for="calcH">Alto (pulg)</label>
+              <input id="calcH" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
+            </div>
+          </div>
+        </form>
+        <div class="hc-out" aria-live="polite">
+          <div class="hc-total"><span>Precio estimado</span><strong id="calcTotal">RD$&nbsp;0.00</strong></div>
+          <div class="hc-meta"><span id="calcArea">—</span><span id="calcRate">—</span></div>
+        </div>
+        <a class="btn btn-wa btn-block" id="calcWa" target="_blank" rel="noopener" href="https://wa.me/18293768157">Cotizar este trabajo</a>
+        <p class="calc-note">
+          Estimado por pie². No incluye diseño de arte, instalación ni acabados
+          especiales (ojales, laminado, corte de contorno).
+        </p>
+      </aside>
     </div>
   </section>
 
@@ -158,53 +206,6 @@
       <div class="section-foot">
         <a href="https://wa.me/18293768157?text=Hola%20Dise%C3%B1o%20Guaro%2C%20necesito%20un%20servicio%20de%20dise%C3%B1o%2Fimpresi%C3%B3n."
            class="btn btn-dark" target="_blank" rel="noopener">Consultar un servicio</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= CALCULADORA ================= -->
-  <section class="section section-alt" id="calculadora">
-    <div class="container">
-      <header class="section-head">
-        <p class="kicker">Calculadora</p>
-        <h2>Calcula el precio de tu impresión</h2>
-        <p class="section-sub">
-          Elige el material y la medida y te damos un estimado al instante.
-          El precio final lo confirmamos por WhatsApp.
-        </p>
-      </header>
-
-      <div class="calc">
-        <form class="calc-form" id="calcForm" autocomplete="off">
-          <div class="calc-field">
-            <label for="calcMat">Material</label>
-            <select id="calcMat">
-              <option value="banner">Banner (lona)</option>
-              <option value="vinil" selected>Vinil adhesivo</option>
-              <option value="sticker">Sticker troquelado</option>
-              <option value="onevision">Onevision</option>
-            </select>
-          </div>
-          <div class="calc-field">
-            <label for="calcW">Ancho (pulgadas)</label>
-            <input id="calcW" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
-          </div>
-          <div class="calc-field">
-            <label for="calcH">Alto (pulgadas)</label>
-            <input id="calcH" type="number" min="1" step="0.5" value="23" inputmode="decimal" />
-          </div>
-        </form>
-
-        <div class="calc-result" aria-live="polite">
-          <div class="calc-line"><span>Área</span><strong id="calcArea">—</strong></div>
-          <div class="calc-line"><span>Tarifa por pie²</span><strong id="calcRate">—</strong></div>
-          <div class="calc-total"><span>Precio estimado</span><strong id="calcTotal">RD$&nbsp;0.00</strong></div>
-          <a class="btn btn-wa btn-block" id="calcWa" target="_blank" rel="noopener" href="https://wa.me/18293768157">Cotizar este trabajo</a>
-          <p class="calc-note">
-            Estimado según tarifa por pie cuadrado. No incluye diseño de arte, instalación
-            ni acabados especiales (ojales, laminado, corte de contorno).
-          </p>
-        </div>
       </div>
     </div>
   </section>
