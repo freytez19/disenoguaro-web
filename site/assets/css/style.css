@@ -154,9 +154,10 @@ p{margin:0 0 1rem}
 .section-alt .card{background:#fff}
 .service .ico{
   display:inline-flex;align-items:center;justify-content:center;
-  width:46px;height:46px;border-radius:12px;background:var(--tinta);color:var(--rojo);
-  font-size:1.3rem;margin-bottom:16px;
+  width:48px;height:48px;border-radius:12px;background:var(--tinta);color:var(--rojo);
+  margin-bottom:16px;
 }
+.service .ico svg{display:block}
 .service h3{font-size:1.16rem;margin-bottom:8px}
 .service p{color:var(--gris);font-size:.97rem;margin:0}
 
@@ -166,7 +167,13 @@ p{margin:0 0 1rem}
   padding:22px 20px;background:#fff;border:1px solid var(--linea);
   border-radius:var(--radio);box-shadow:var(--sombra);
 }
-.product .p-ico{font-size:1.7rem;line-height:1}
+.product .p-ico{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:11px;
+  background:var(--hueso);color:var(--rojo);border:1px solid var(--linea);
+}
+.section-alt .product .p-ico{background:#faf8f3}
+.product .p-ico svg{display:block}
 .product h3{font-size:1.03rem}
 .product p{color:var(--gris);font-size:.9rem;margin:0;flex:1}
 .product .p-link{

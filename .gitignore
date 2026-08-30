@@ -5,6 +5,7 @@ desktop.ini
 
 # Entregables generados
 *.zip
+preview-artifact.html
 
 # Temporales
 *.tmp
