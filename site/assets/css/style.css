@@ -108,13 +108,25 @@ p{margin:0 0 1rem}
 
 /* ---------- Hero ---------- */
 .hero{position:relative;color:#fff;background:var(--tinta);overflow:hidden}
-.hero-bg{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(circle at 82% 12%, rgba(225,27,14,.55), transparent 42%),
-    radial-gradient(circle at 8% 92%, rgba(225,27,14,.30), transparent 45%),
-    repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 2px, transparent 2px 22px);
+.hero-full{min-height:calc(100svh - 81px);display:flex;flex-direction:column;justify-content:center}
+.hero-video{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  z-index:0;opacity:.34;
 }
+.hero-bg{
+  position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(to right, rgba(17,17,17,.92), rgba(17,17,17,.55) 55%, rgba(17,17,17,.75)),
+    radial-gradient(circle at 82% 12%, rgba(225,27,14,.45), transparent 46%),
+    radial-gradient(circle at 8% 95%, rgba(225,27,14,.30), transparent 45%);
+}
+.hero-scroll{
+  position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:2;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  color:#fff;opacity:.7;animation:hero-bob 1.8s ease-in-out infinite;
+}
+.hero-scroll:hover{opacity:1}
+@keyframes hero-bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
 .hero-art{
   position:absolute;left:0;right:0;bottom:0;width:100%;height:min(62%,440px);
   pointer-events:none;opacity:.9;
@@ -192,6 +204,36 @@ p{margin:0 0 1rem}
 }
 .hc-meta{display:flex;justify-content:space-between;gap:10px;font-size:.78rem;color:var(--gris);margin-top:5px;font-variant-numeric:tabular-nums}
 .hero-calc .calc-note{font-size:.7rem;color:#9a9a9a;margin:0;line-height:1.45}
+
+/* ---------- Accesos rápidos (portada) ---------- */
+.quick-links{background:var(--tinta);color:#fff;padding:0 0 70px}
+.ql-grid{grid-template-columns:repeat(4,1fr)}
+.ql-card{
+  display:flex;flex-direction:column;gap:4px;
+  padding:22px 20px;border-radius:14px;
+  background:#1c1c1c;border:1px solid #2e2e2e;transition:.18s;
+}
+.ql-card:hover{border-color:var(--rojo);transform:translateY(-3px);background:#232323}
+.ql-k{font-family:var(--display);text-transform:uppercase;letter-spacing:-.005em;font-size:1.15rem}
+.ql-t{color:#b5b5b5;font-size:.9rem}
+
+/* ---------- Páginas internas ---------- */
+.page-main{padding:64px 0 90px}
+.page-head{max-width:680px;margin:0 auto 46px;text-align:center}
+.page-head h1{
+  font-family:var(--display);font-weight:400;text-transform:uppercase;
+  letter-spacing:-.005em;line-height:1.05;font-size:clamp(1.8rem,4vw,2.7rem);
+  text-wrap:balance;margin:6px 0 14px;
+}
+.page-sub{color:var(--gris);font-size:1.05rem}
+.page-sub.light{color:#c7c7c7}
+.page-foot{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:48px}
+.contacto-main{padding-top:64px;padding-bottom:80px}
+.contacto-main h1{
+  font-family:var(--display);font-weight:400;text-transform:uppercase;
+  letter-spacing:-.005em;line-height:1.06;font-size:clamp(1.7rem,3.6vw,2.4rem);
+  text-wrap:balance;margin:6px 0 12px;
+}
 
 /* ---------- Secciones ---------- */
 .section{padding:88px 0}
@@ -372,6 +414,7 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
   .products-grid{grid-template-columns:repeat(2,1fr)}
   .video-grid{grid-template-columns:repeat(2,1fr)}
   .trabajos-teaser{grid-template-columns:repeat(2,1fr)}
+  .ql-grid{grid-template-columns:repeat(2,1fr)}
   .contact-inner{grid-template-columns:1fr;gap:32px}
   .contact-cta-card{position:static}
 }
@@ -379,6 +422,13 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
   body{font-size:16px}
   .section{padding:64px 0}
   .hero-art{height:38%}
+  .hero-video{display:none}
+  .hero-full{min-height:0}
+  .hero-bg{background:
+    linear-gradient(to bottom, rgba(17,17,17,.9), rgba(17,17,17,.96)),
+    radial-gradient(circle at 80% 8%, rgba(225,27,14,.5), transparent 50%),
+    radial-gradient(circle at 10% 100%, rgba(225,27,14,.3), transparent 45%);}
+  .hero-scroll{display:none}
   .main-nav{
     position:fixed;inset:81px 0 auto 0;flex-direction:column;align-items:stretch;gap:0;
     background:#151515;border-bottom:3px solid var(--rojo);
@@ -396,6 +446,7 @@ a.contact-item:hover{border-color:var(--rojo);background:#2b2b2b}
 @media (max-width:460px){
   .services-grid,.products-grid{grid-template-columns:1fr}
   .video-grid{grid-template-columns:1fr;max-width:380px}
+  .ql-grid{grid-template-columns:1fr}
   .hc-row{grid-template-columns:1fr}
 }
 
