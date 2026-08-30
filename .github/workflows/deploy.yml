@@ -1,0 +1,26 @@
+name: Deploy a disenoguaro.com
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Subir el sitio por SSH (rsync)
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          SOURCE: "site/"
+          TARGET: "public_html/"
+          # -r recursivo, -l enlaces, -t fechas, -D dispositivos, -z comprime, -v detalle, -O sin fechas de carpeta
+          # SIN --delete: nunca borra nada del servidor (protege wordpress-backup y todo lo demás)
+          ARGS: "-rltDzvO"
