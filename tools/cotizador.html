@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cotizador Diseño Guaro</title>
+<style>
+  :root{
+    --rojo:#d40000; --tinta:#151515; --linea:#d9d9d9; --gris:#6b6b6b;
+    --bg:#eef0f2; --panel:#fff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Segoe UI",Arial,Helvetica,sans-serif;
+    background:var(--bg); color:var(--tinta);
+  }
+  h1,h2,h3{margin:0}
+
+  /* ---------- App shell (pantalla) ---------- */
+  .app{display:grid; grid-template-columns:minmax(360px,440px) 1fr; gap:0; min-height:100vh}
+  .editor{background:var(--panel); border-right:1px solid var(--linea); padding:18px 18px 60px; overflow:auto}
+  .previewpane{padding:26px; overflow:auto; display:flex; justify-content:center; align-items:flex-start}
+
+  .brandbar{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  .brandbar img{height:34px}
+  .brandbar b{font-family:"Archivo Black","Arial Black",Impact,sans-serif; letter-spacing:.5px; font-size:1rem}
+
+  .field{margin-bottom:10px}
+  .field label{display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--gris); margin-bottom:3px; font-weight:700}
+  .field input,.field textarea,.field select{
+    width:100%; padding:7px 9px; border:1px solid #cfcfcf; border-radius:6px; font:inherit; background:#fff;
+  }
+  .field textarea{resize:vertical; min-height:38px}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px}
+
+  fieldset{border:1px solid var(--linea); border-radius:8px; padding:12px; margin:0 0 16px}
+  legend{font-size:.74rem; text-transform:uppercase; letter-spacing:.06em; color:var(--rojo); font-weight:800; padding:0 6px}
+
+  .items{display:flex; flex-direction:column; gap:10px}
+  .item{border:1px solid #e3e3e3; border-radius:8px; padding:10px; background:#fafafa; position:relative}
+  .item .grip{position:absolute; top:6px; right:8px}
+  .item .del{border:0; background:transparent; color:#b00; cursor:pointer; font-size:1rem; line-height:1}
+  .item .calcline{font-size:.74rem; color:var(--gris); margin-top:4px}
+
+  .btn{display:inline-flex; align-items:center; gap:6px; border:0; border-radius:7px; padding:9px 13px; font:inherit; font-weight:700; cursor:pointer}
+  .btn-sm{padding:6px 10px; font-size:.82rem}
+  .btn-red{background:var(--rojo); color:#fff}
+  .btn-dark{background:var(--tinta); color:#fff}
+  .btn-ghost{background:#fff; border:1px solid #cfcfcf}
+  .btn-wa{background:#25d366; color:#04310f}
+  .btn-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+
+  .toolbar{position:sticky; top:0; z-index:5; background:var(--panel); padding-bottom:12px; margin-bottom:6px; border-bottom:1px solid var(--linea)}
+  .hint{font-size:.75rem; color:var(--gris); line-height:1.5}
+  .muted{color:var(--gris)}
+
+  datalist{display:none}
+
+  /* ---------- La hoja (documento imprimible) ---------- */
+  .sheet{
+    width:8.5in; min-height:11in; background:#fff; color:#000;
+    padding:0.55in 0.6in 0.5in; box-shadow:0 8px 30px rgba(0,0,0,.18);
+    font-family:Arial,Helvetica,sans-serif; font-size:10.5px; line-height:1.35;
+    display:flex; flex-direction:column;
+  }
+  .sheet .topline{border-top:2px solid #000; margin-bottom:10px}
+  .sheet header.dg{display:flex; justify-content:space-between; align-items:flex-start; gap:20px}
+  .sheet .wm{font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-size:30px; line-height:.95; letter-spacing:.5px; white-space:nowrap}
+  .sheet header.dg > div{min-width:0}
+  .sheet .contact{font-size:10px; margin-top:6px; color:#111}
+  .sheet .logo{height:74px; flex:none}
+  .sheet .doctitle{text-align:right; font-size:22px; font-weight:800; color:#8a8a8a; letter-spacing:2px; margin:10px 0 6px}
+  .sheet hr.rule{border:0; border-top:1px solid #bdbdbd; margin:6px 0 12px}
+
+  .sheet .clientbox{display:flex; justify-content:space-between; gap:16px; background:#efefef; padding:12px 14px; border-radius:2px}
+  .sheet .clientbox .cb-l div{margin-bottom:3px}
+  .sheet .clientbox .lab{font-weight:700}
+  .sheet .metabox{flex:none; min-width:190px; display:flex; flex-direction:column; gap:8px}
+  .sheet .metabox .mb{border:1px solid #cfcfcf; background:#fff; padding:6px 10px; font-size:10px; display:flex; justify-content:space-between; gap:10px}
+  .sheet .metabox .mb b{font-weight:700}
+
+  table.lines{width:100%; border-collapse:collapse; margin-top:18px}
+  table.lines th{font-size:10px; text-transform:capitalize; border-bottom:1px solid #000; padding:0 6px 6px; text-align:right}
+  table.lines th:nth-child(1){text-align:left; width:56px}
+  table.lines th:nth-child(2){text-align:left}
+  table.lines td{padding:12px 6px 0; vertical-align:top; text-align:right}
+  table.lines td:nth-child(1){text-align:left; color:#333}
+  table.lines td:nth-child(2){text-align:left}
+  table.lines td .sub{display:block; color:#555; font-size:9.5px}
+  .tnum{font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  .sheet .spacer{flex:1 1 auto; min-height:40px}
+  .sheet .foot{display:flex; justify-content:space-between; gap:24px; align-items:flex-start}
+  .sheet .foot .obs{font-size:9.5px; max-width:60%}
+  .sheet .foot .obs .h{font-weight:700; margin-bottom:2px}
+  .sheet .foot .obs .tc{color:#7a7a7a; margin-top:10px}
+  .sheet .totals{flex:none; min-width:210px; font-size:11px}
+  .sheet .totals .tr{display:flex; justify-content:space-between; gap:16px; padding:3px 0}
+  .sheet .totals .tr.grand{border-top:1px solid #000; margin-top:4px; padding-top:6px; font-weight:800}
+  .sheet .sign{margin-top:26px; text-align:center; font-size:9px; color:#333}
+  .sheet .sign .l{width:280px; border-top:1px solid #000; margin:0 auto 4px}
+  .sheet .bottomline{border-top:2px solid #000; margin-top:14px}
+
+  /* ---------- Impresión ---------- */
+  @page{size:letter; margin:0}
+  @media print{
+    .no-print{display:none !important}
+    body{background:#fff}
+    .app{display:block}
+    .previewpane{padding:0; display:block}
+    .sheet{width:auto; min-height:auto; box-shadow:none; padding:0.5in 0.55in}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= EDITOR ================= -->
+  <div class="editor no-print">
+    <div class="toolbar">
+      <div class="brandbar">
+        <img src="__LOGO__" alt="" />
+        <b>Cotizador</b>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-red" id="btnPrint">🖨️ Guardar PDF</button>
+        <button class="btn btn-wa" id="btnWa">WhatsApp al cliente</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" id="btnSaveNext">✓ Guardar y pasar a la siguiente</button>
+        <button class="btn btn-ghost btn-sm" id="btnNew">Nueva</button>
+      </div>
+      <p class="hint" id="statusLine">&nbsp;</p>
+    </div>
+
+    <fieldset>
+      <legend>Cotización</legend>
+      <div class="row2">
+        <div class="field"><label>No.</label><input id="fNo" inputmode="numeric" /></div>
+        <div class="field"><label>Fecha</label><input id="fFecha" type="date" /></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cliente</legend>
+      <div class="field">
+        <label>Nombre / Empresa</label>
+        <input id="fCliente" list="dlClients" autocomplete="off" placeholder="EMPRESA SRL" />
+        <datalist id="dlClients"></datalist>
+      </div>
+      <div class="row2">
+        <div class="field"><label>RNC</label><input id="fRnc" autocomplete="off" /></div>
+        <div class="field"><label>Teléfono</label><input id="fTel" autocomplete="off" placeholder="(829) 000-0000" /></div>
+      </div>
+      <div class="field"><label>Dirección</label><input id="fDir" autocomplete="off" /></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" id="btnSaveClient">Guardar este cliente</button>
+        <button class="btn btn-ghost btn-sm" id="btnDelClient">Olvidar</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Renglones</legend>
+      <div class="items" id="items"></div>
+      <div class="btn-row">
+        <button class="btn btn-dark btn-sm" id="btnAddItem">+ Renglón</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Calculadora de material</legend>
+      <div class="field">
+        <label>Material</label>
+        <select id="mMat">
+          <option value="banner">Banner (lona) — RD$70/pie²</option>
+          <option value="vinil">Vinil adhesivo — RD$70/pie²</option>
+          <option value="sticker">Sticker troquelado — RD$90/pie² (mín. 500)</option>
+          <option value="onevision">One Vision — RD$130/pie²</option>
+        </select>
+      </div>
+      <div class="row3">
+        <div class="field"><label>Ancho (pulg)</label><input id="mW" type="number" min="0" step="0.1" value="23" /></div>
+        <div class="field"><label>Alto (pulg)</label><input id="mH" type="number" min="0" step="0.1" value="23" /></div>
+        <div class="field"><label>Cantidad</label><input id="mQ" type="number" min="1" step="1" value="1" /></div>
+      </div>
+      <p class="hint" id="mOut">&nbsp;</p>
+      <div class="btn-row">
+        <button class="btn btn-dark btn-sm" id="btnAddCalc">Agregar como renglón</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Pie de página</legend>
+      <div class="field"><label>Observaciones</label><textarea id="fObs" rows="2"></textarea></div>
+      <div class="field"><label>Términos y condiciones</label><textarea id="fTc" rows="2"></textarea></div>
+    </fieldset>
+
+    <p class="hint muted">
+      Todo se guarda solo en este navegador (borrador, clientes y el consecutivo de No.).
+      Para el PDF: botón <b>Guardar PDF</b> → destino <b>“Guardar como PDF”</b> → Guardar.
+    </p>
+  </div>
+
+  <!-- ================= VISTA PREVIA ================= -->
+  <div class="previewpane">
+    <div class="sheet" id="sheet"></div>
+  </div>
+</div>
+
+<datalist id="dlCodigos"></datalist>
+
+<script>
+(function(){
+  "use strict";
+  var LOGO = "__LOGO__";
+  var $ = function(s,c){return (c||document).querySelector(s)};
+  var money = function(n){
+    n = isFinite(n) ? n : 0;
+    return "RD$ " + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  };
+  var pad4 = function(n){ n = String(parseInt(n,10)||0); while(n.length<4) n="0"+n; return n; };
+  var digits = function(s){ return (s||"").replace(/\D/g,""); };
+  var ITBIS = 0.18;
+
+  var RATES = { banner:{l:"Banner (lona)",r:70,min:0}, vinil:{l:"Vinil adhesivo",r:70,min:0},
+                sticker:{l:"Sticker troquelado",r:90,min:500}, onevision:{l:"One Vision",r:130,min:0} };
+
+  var LS = {
+    get:function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+    set:function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  };
+
+  // ---------- estado ----------
+  var today = new Date();
+  var iso = today.getFullYear()+"-"+pad2(today.getMonth()+1)+"-"+pad2(today.getDate());
+  function pad2(n){ return (n<10?"0":"")+n; }
+
+  var lastNo = LS.get("dg_cot_lastno", 319);
+  var draft = LS.get("dg_cot_draft", null);
+
+  var state = draft || {
+    no: lastNo + 1,
+    fecha: iso,
+    cliente:"", rnc:"", tel:"", dir:"",
+    items:[ blankItem() ],
+    obs:"",
+    tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad."
+  };
+  if(!state.items || !state.items.length) state.items=[blankItem()];
+
+  function blankItem(){ return {codigo:"",desc:"",cant:1,precio:0,calc:""}; }
+
+  // ---------- clientes / catálogo guardados ----------
+  function clients(){ return LS.get("dg_cot_clients", {}); }
+  function catalog(){ return LS.get("dg_cot_catalog", {}); }
+
+  function refreshClientList(){
+    var dl = $("#dlClients"); dl.innerHTML="";
+    var c = clients();
+    Object.keys(c).sort().forEach(function(name){
+      var o=document.createElement("option"); o.value=name; dl.appendChild(o);
+    });
+  }
+  function refreshCodigoList(){
+    var dl = $("#dlCodigos"); dl.innerHTML="";
+    var cat = catalog();
+    Object.keys(cat).forEach(function(code){
+      var o=document.createElement("option"); o.value=code; o.label=cat[code].desc; dl.appendChild(o);
+    });
+  }
+
+  // ---------- cálculo ----------
+  function calcTotals(){
+    var sub=0;
+    state.items.forEach(function(it){
+      var line = (parseFloat(it.cant)||0) * (parseFloat(it.precio)||0);
+      it._line = line; sub += line;
+    });
+    var itbis = sub*ITBIS;
+    return { sub:sub, itbis:itbis, total:sub+itbis };
+  }
+
+  // ---------- render editor: renglones ----------
+  function renderItems(){
+    var wrap = $("#items"); wrap.innerHTML="";
+    state.items.forEach(function(it,idx){
+      var d = document.createElement("div"); d.className="item";
+      d.innerHTML =
+        '<div class="grip"><button class="del" title="Quitar" data-del="'+idx+'">✕</button></div>'+
+        '<div class="row2">'+
+          '<div class="field"><label>Código</label><input data-k="codigo" data-i="'+idx+'" list="dlCodigos" autocomplete="off" value="'+esc(it.codigo)+'"></div>'+
+          '<div class="field"><label>Cantidad</label><input data-k="cant" data-i="'+idx+'" type="number" min="0" step="1" value="'+esc(it.cant)+'"></div>'+
+        '</div>'+
+        '<div class="field"><label>Descripción</label><textarea data-k="desc" data-i="'+idx+'" rows="2">'+esc(it.desc)+'</textarea></div>'+
+        '<div class="field"><label>Precio unitario (sin ITBIS)</label><input data-k="precio" data-i="'+idx+'" type="number" min="0" step="0.01" value="'+esc(it.precio)+'"></div>'+
+        (it.calc ? '<div class="calcline">'+esc(it.calc)+'</div>' : '');
+      wrap.appendChild(d);
+    });
+  }
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  // ---------- render hoja ----------
+  function fmtFecha(isoStr){
+    var p=(isoStr||"").split("-"); if(p.length!==3) return isoStr||"";
+    return p[2]+" / "+p[1]+" / "+p[0];
+  }
+  function renderSheet(){
+    var t = calcTotals();
+    var rows = state.items.filter(function(it){ return (it.desc||it.codigo||it.precio); }).map(function(it){
+      var descMain = esc((it.desc||"").split("\n")[0]||"");
+      var descRest = (it.desc||"").split("\n").slice(1).join("\n");
+      return '<tr>'+
+        '<td>'+esc(it.codigo||"")+'</td>'+
+        '<td>'+descMain+(descRest?'<span class="sub">'+esc2(descRest)+'</span>':'')+'</td>'+
+        '<td class="tnum">'+(parseFloat(it.cant)||0)+'</td>'+
+        '<td class="tnum">'+money(parseFloat(it.precio)||0)+'</td>'+
+        '<td class="tnum">'+money(unitbis(it))+'</td>'+
+        '<td class="tnum">'+money(it._line||0)+'</td>'+
+      '</tr>';
+    }).join("");
+
+    $("#sheet").innerHTML =
+      '<div class="topline"></div>'+
+      '<header class="dg">'+
+        '<div>'+
+          '<div class="wm">DISEÑO GUARO</div>'+
+          '<div class="contact">Tel.: (829) 376-8157<br>Calle Guarocuya 99, Distrito Nacional.</div>'+
+        '</div>'+
+        '<img class="logo" src="'+LOGO+'" alt="Diseño Guaro">'+
+      '</header>'+
+      '<hr class="rule">'+
+      '<div class="doctitle">COTIZACIÓN</div>'+
+      '<div class="clientbox">'+
+        '<div class="cb-l">'+
+          '<div><span class="lab">CLIENTE:</span> '+esc(state.cliente||"")+'</div>'+
+          '<div><span class="lab">RNC:</span> '+esc(state.rnc||"")+'</div>'+
+          '<div><span class="lab">Teléfono:</span> '+esc(state.tel||"")+'</div>'+
+          '<div><span class="lab">Dirección:</span> '+esc(state.dir||"")+'</div>'+
+        '</div>'+
+        '<div class="metabox">'+
+          '<div class="mb"><b>FECHA</b><span>'+fmtFecha(state.fecha)+'</span></div>'+
+          '<div class="mb"><b>No.</b><span>'+pad4(state.no)+'</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<table class="lines"><thead><tr>'+
+        '<th>Código</th><th>Descripción</th><th>Cantidad</th><th>Precio</th><th>Itbis</th><th>Subtotal</th>'+
+      '</tr></thead><tbody>'+ (rows || '<tr><td></td><td class="muted">— sin renglones —</td><td></td><td></td><td></td><td></td></tr>') +'</tbody></table>'+
+      '<div class="spacer"></div>'+
+      '<div class="foot">'+
+        '<div class="obs">'+
+          '<div class="h">Observaciones</div>'+
+          '<div>'+esc2(state.obs||"")+'</div>'+
+          '<div class="tc"><b>Términos y Condiciones</b><br>'+esc2(state.tc||"")+'</div>'+
+        '</div>'+
+        '<div class="totals">'+
+          '<div class="tr"><span>SUB-TOTAL</span><span class="tnum">'+money(t.sub)+'</span></div>'+
+          '<div class="tr"><span>ITBIS</span><span class="tnum">'+money(t.itbis)+'</span></div>'+
+          '<div class="tr grand"><span>TOTAL</span><span class="tnum">'+money(t.total)+'</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="sign"><div class="l"></div>ACEPTADA, FIRMA Y/O SELLO Y FECHA</div>'+
+      '<div class="bottomline"></div>';
+
+    document.title = "Cotizacion " + (parseInt(state.no,10)||"") + (state.cliente? " "+state.cliente : "");
+  }
+  function unitbis(it){ return (parseFloat(it.precio)||0)*ITBIS; }
+  function esc2(s){ return esc(s).replace(/\n/g,"<br>"); }
+
+  function renderAll(){ renderItems(); renderSheet(); saveDraft(); }
+
+  function saveDraft(){ LS.set("dg_cot_draft", state); }
+
+  // ---------- bindings editor ----------
+  function bind(id,key,transform){
+    var el=$(id);
+    el.addEventListener("input",function(){
+      state[key] = transform? transform(el.value) : el.value;
+      renderSheet(); saveDraft();
+    });
+  }
+  bind("#fNo","no",function(v){return parseInt(digits(v),10)||0;});
+  bind("#fFecha","fecha");
+  bind("#fRnc","rnc"); bind("#fTel","tel"); bind("#fDir","dir");
+  bind("#fObs","obs"); bind("#fTc","tc");
+
+  $("#fCliente").addEventListener("input",function(){
+    state.cliente = this.value;
+    var c = clients()[this.value.trim()];
+    if(c){ state.rnc=c.rnc||""; state.tel=c.tel||""; state.dir=c.dir||"";
+      $("#fRnc").value=state.rnc; $("#fTel").value=state.tel; $("#fDir").value=state.dir; }
+    renderSheet(); saveDraft();
+  });
+
+  $("#items").addEventListener("input",function(e){
+    var el=e.target, i=el.getAttribute("data-i"), k=el.getAttribute("data-k");
+    if(i==null) return;
+    state.items[i][k] = el.value;
+    if(k==="codigo"){
+      var cat=catalog()[el.value.trim()];
+      if(cat){ state.items[i].desc=cat.desc; state.items[i].precio=cat.precio;
+        renderItems(); }
+    }
+    renderSheet(); saveDraft();
+  });
+  $("#items").addEventListener("click",function(e){
+    var d=e.target.getAttribute("data-del");
+    if(d!=null){ state.items.splice(d,1); if(!state.items.length) state.items.push(blankItem()); renderAll(); }
+  });
+  $("#btnAddItem").addEventListener("click",function(){ state.items.push(blankItem()); renderAll(); });
+
+  // ---------- calculadora ----------
+  function calcMat(){
+    var m=RATES[$("#mMat").value], w=parseFloat($("#mW").value)||0, h=parseFloat($("#mH").value)||0, q=parseInt($("#mQ").value,10)||1;
+    var ft2=(w*h)/144;
+    var unit=ft2*m.r;
+    var applied = m.min && unit<m.min;
+    if(applied) unit=m.min;
+    return {m:m,w:w,h:h,q:q,ft2:ft2,unit:unit,applied:applied};
+  }
+  function showMat(){
+    var c=calcMat();
+    $("#mOut").innerHTML = c.ft2>0
+      ? c.ft2.toFixed(2)+" pie² × RD$"+c.m.r+" = <b>"+money(c.unit)+"</b> c/u"+(c.applied?" (mínimo aplicado)":"")+" · "+c.q+" u = <b>"+money(c.unit*c.q)+"</b>"
+      : "&nbsp;";
+  }
+  ["#mMat","#mW","#mH","#mQ"].forEach(function(s){ $(s).addEventListener("input",showMat); });
+  $("#btnAddCalc").addEventListener("click",function(){
+    var c=calcMat(); if(c.ft2<=0) return;
+    state.items.push({
+      codigo:"", desc:c.m.l+" — impresión "+trim(c.w)+" x "+trim(c.h)+" pulg",
+      cant:c.q, precio:round2(c.unit),
+      calc:c.ft2.toFixed(2)+" pie² × RD$"+c.m.r+(c.applied?" · mínimo RD$"+c.m.min:"")
+    });
+    renderAll();
+  });
+  function trim(n){ return String(Math.round(n*100)/100); }
+  function round2(n){ return Math.round(n*100)/100; }
+
+  // ---------- acciones ----------
+  $("#btnPrint").addEventListener("click",function(){ window.print(); });
+
+  $("#btnWa").addEventListener("click",function(){
+    var t=calcTotals();
+    var ph=digits(state.tel); if(ph.length===10) ph="1"+ph;
+    var msg="Hola"+(state.cliente?" "+firstWord(state.cliente):"")+", le comparto la cotización No. "+pad4(state.no)+
+            " de Diseño Guaro por un total de "+money(t.total)+" (ITBIS incluido). "+
+            "Para iniciar se abona el 50%. Quedo atento a su confirmación. — Diseño Guaro";
+    var url="https://wa.me/"+(ph||"")+"?text="+encodeURIComponent(msg);
+    window.open(url,"_blank");
+  });
+  function firstWord(s){ return String(s).trim().split(/\s+/)[0]; }
+
+  $("#btnSaveClient").addEventListener("click",function(){
+    var name=(state.cliente||"").trim(); if(!name){ flash("Escribe el nombre del cliente primero."); return; }
+    var c=clients(); c[name]={rnc:state.rnc||"",tel:state.tel||"",dir:state.dir||""};
+    LS.set("dg_cot_clients",c); refreshClientList(); flash("Cliente “"+name+"” guardado.");
+  });
+  $("#btnDelClient").addEventListener("click",function(){
+    var name=(state.cliente||"").trim(); var c=clients();
+    if(c[name]){ delete c[name]; LS.set("dg_cot_clients",c); refreshClientList(); flash("Cliente olvidado."); }
+  });
+
+  $("#btnSaveNext").addEventListener("click",function(){
+    // guarda catálogo de códigos usados
+    var cat=catalog();
+    state.items.forEach(function(it){
+      var code=(it.codigo||"").trim();
+      if(code) cat[code]={desc:(it.desc||"").split("\n")[0], precio:parseFloat(it.precio)||0};
+    });
+    LS.set("dg_cot_catalog",cat); refreshCodigoList();
+
+    // fija el consecutivo
+    LS.set("dg_cot_lastno", parseInt(state.no,10)||lastNo);
+    var histn = parseInt(state.no,10)||0;
+
+    flash("Cotización No. "+pad4(histn)+" registrada. Nueva: No. "+pad4(histn+1)+".");
+
+    // nueva cotización conservando cliente
+    state = {
+      no: histn+1, fecha: iso,
+      cliente:state.cliente, rnc:state.rnc, tel:state.tel, dir:state.dir,
+      items:[blankItem()], obs:"",
+      tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad."
+    };
+    lastNo = histn;
+    fillForm(); renderAll();
+  });
+
+  $("#btnNew").addEventListener("click",function(){
+    if(!confirm("¿Empezar una cotización en blanco? (el borrador actual se pierde)")) return;
+    var n = (LS.get("dg_cot_lastno",319))+1;
+    state = { no:n, fecha:iso, cliente:"",rnc:"",tel:"",dir:"", items:[blankItem()], obs:"",
+              tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad." };
+    fillForm(); renderAll();
+  });
+
+  function flash(msg){ var s=$("#statusLine"); s.textContent=msg; s.style.color="#0a7d32";
+    clearTimeout(flash._t); flash._t=setTimeout(function(){ s.innerHTML="&nbsp;"; s.style.color=""; },6000); }
+
+  // ---------- init ----------
+  function fillForm(){
+    $("#fNo").value = state.no;
+    $("#fFecha").value = state.fecha;
+    $("#fCliente").value = state.cliente||"";
+    $("#fRnc").value = state.rnc||"";
+    $("#fTel").value = state.tel||"";
+    $("#fDir").value = state.dir||"";
+    $("#fObs").value = state.obs||"";
+    $("#fTc").value = state.tc||"";
+  }
+  refreshClientList(); refreshCodigoList();
+  fillForm(); renderAll(); showMat();
+})();
+</script>
+</body>
+</html>
