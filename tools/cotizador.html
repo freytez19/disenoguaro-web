@@ -68,6 +68,7 @@
   .sheet .topline{border-top:2px solid #000; margin-bottom:10px}
   .sheet header.dg{display:flex; justify-content:space-between; align-items:flex-start; gap:20px}
   .sheet .wm{font-family:"Archivo Black","Arial Black",Impact,sans-serif; font-size:30px; line-height:.95; letter-spacing:.5px; white-space:nowrap}
+  .sheet .wm .srl{font-size:.42em; letter-spacing:1px}
   .sheet header.dg > div{min-width:0}
   .sheet .contact{font-size:10px; margin-top:6px; color:#111}
   .sheet .logo{height:74px; flex:none}
@@ -93,7 +94,7 @@
 
   .sheet .spacer{flex:1 1 auto; min-height:40px}
   .sheet .foot{display:flex; justify-content:space-between; gap:24px; align-items:flex-start}
-  .sheet .foot .obs{font-size:9.5px; max-width:60%}
+  .sheet .foot .obs{font-size:9.5px; max-width:64%}
   .sheet .foot .obs .h{font-weight:700; margin-bottom:2px}
   .sheet .foot .obs .tc{color:#7a7a7a; margin-top:10px}
   .sheet .totals{flex:none; min-width:210px; font-size:11px}
@@ -246,7 +247,7 @@
     cliente:"", rnc:"", tel:"", dir:"",
     items:[ blankItem() ],
     obs:"",
-    tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad."
+    tc:"Para proceder con el trabajo deben abonar el 60% de su totalidad. Cotización válida por 10 días.\nPago: Banco Santa Cruz · Cuenta de Ahorro No. 11312010036226 · DISEÑO GUARO SRL · RNC 132988108"
   };
   if(!state.items || !state.items.length) state.items=[blankItem()];
 
@@ -325,8 +326,8 @@
       '<div class="topline"></div>'+
       '<header class="dg">'+
         '<div>'+
-          '<div class="wm">DISEÑO GUARO</div>'+
-          '<div class="contact">Tel.: (829) 376-8157<br>Calle Guarocuya 99, Distrito Nacional.</div>'+
+          '<div class="wm">DISEÑO GUARO<span class="srl">&nbsp;SRL</span></div>'+
+          '<div class="contact">RNC 132 988 108<br>Tel.: (829) 376-8157<br>Calle Guarocuya 99, Distrito Nacional.</div>'+
         '</div>'+
         '<img class="logo" src="'+LOGO+'" alt="Diseño Guaro">'+
       '</header>'+
@@ -482,7 +483,7 @@
       no: histn+1, fecha: iso,
       cliente:state.cliente, rnc:state.rnc, tel:state.tel, dir:state.dir,
       items:[blankItem()], obs:"",
-      tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad."
+      tc:"Para proceder con el trabajo deben abonar el 60% de su totalidad. Cotización válida por 10 días.\nPago: Banco Santa Cruz · Cuenta de Ahorro No. 11312010036226 · DISEÑO GUARO SRL · RNC 132988108"
     };
     lastNo = histn;
     fillForm(); renderAll();
@@ -492,7 +493,7 @@
     if(!confirm("¿Empezar una cotización en blanco? (el borrador actual se pierde)")) return;
     var n = (LS.get("dg_cot_lastno",319))+1;
     state = { no:n, fecha:iso, cliente:"",rnc:"",tel:"",dir:"", items:[blankItem()], obs:"",
-              tc:"Para proceder con el trabajo deben abonar el 50% de su totalidad." };
+              tc:"Para proceder con el trabajo deben abonar el 60% de su totalidad. Cotización válida por 10 días.\nPago: Banco Santa Cruz · Cuenta de Ahorro No. 11312010036226 · DISEÑO GUARO SRL · RNC 132988108" };
     fillForm(); renderAll();
   });
 
